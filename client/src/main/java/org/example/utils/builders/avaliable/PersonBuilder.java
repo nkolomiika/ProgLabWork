@@ -1,14 +1,20 @@
-package org.example.utils.builders;
+package org.example.utils.builders.avaliable;
 
+import org.example.exceptions.file.FileReaderRuntimeException;
 import org.example.exceptions.input.EmptyStringRuntimeException;
 import org.example.exceptions.input.NegativeValueRuntimeException;
-import org.example.model.Color;
-import org.example.model.Country;
-import org.example.model.Person;
-import org.example.utils.io.Console;
+import org.example.model.data.Color;
+import org.example.model.data.Country;
+import org.example.model.data.Person;
+import org.example.runners.RuntimeMode;
+import org.example.utils.builders.abstracts.AbstractBuilder;
+import org.example.utils.io.console.Console;
 
-public class PersonBuilder {
-    public static Person build() {
+import java.io.IOException;
+
+public class PersonBuilder extends AbstractBuilder {
+
+    public static Person build() throws IOException {
         return new Person(
                 inputName(),
                 inputWeight(),
@@ -18,13 +24,14 @@ public class PersonBuilder {
         );
     }
 
-    private static String inputName() {
+    private static String inputName() throws IOException {
         String name;
 
         while (true) {
             try {
                 Console.print("Input author name:");
-                name = Console.nextLine();
+                name = runtimeMode == RuntimeMode.CONSOLE
+                        ? Console.nextLine() : fileReader.readLine();
 
                 if (name.isEmpty()) throw new EmptyStringRuntimeException();
                 break;
@@ -35,17 +42,18 @@ public class PersonBuilder {
         return name;
     }
 
-    private static Float inputWeight() {
+    private static Float inputWeight() throws IOException {
         String strWeight;
         float weight;
 
         while (true) {
             try {
                 Console.print("Input author weight:");
-                strWeight = Console.nextLine();
-                
-                weight = Float.parseFloat(strWeight);
+                strWeight = runtimeMode == RuntimeMode.CONSOLE
+                        ? Console.nextLine() : fileReader.readLine();
+
                 if (strWeight.isEmpty()) return null;
+                weight = Float.parseFloat(strWeight);
                 if (weight <= 0) throw new NegativeValueRuntimeException();
                 break;
             } catch (RuntimeException exception) {
@@ -55,15 +63,17 @@ public class PersonBuilder {
         return weight;
     }
 
-    private static Color inputEyeColor() {
+    private static Color inputEyeColor() throws IOException {
         String strEyeColor;
         Color eyeColor;
 
         while (true) {
             try {
                 Console.print("Choose eye color from " + Color.getAllValues() + ":");
-                strEyeColor = Console.nextLine().toUpperCase();
-                
+                strEyeColor = runtimeMode == RuntimeMode.CONSOLE
+                        ? Console.nextLine() : fileReader.readLine();
+                strEyeColor = strEyeColor.toUpperCase();
+
                 if (strEyeColor.isEmpty()) throw new EmptyStringRuntimeException();
                 eyeColor = Color.valueOf(strEyeColor);
                 break;
@@ -74,14 +84,16 @@ public class PersonBuilder {
         return eyeColor;
     }
 
-    private static Color inputHairColor() {
+    private static Color inputHairColor() throws IOException {
         String strHairColor;
         Color hairColor;
 
         while (true) {
             try {
                 Console.print("Choose hair color from " + Color.getAllValues() + ":");
-                strHairColor = Console.nextLine().toUpperCase();
+                strHairColor = runtimeMode == RuntimeMode.CONSOLE
+                        ? Console.nextLine() : fileReader.readLine();
+                strHairColor = strHairColor.toUpperCase();
 
                 if (strHairColor.isEmpty()) return null;
                 hairColor = Color.valueOf(strHairColor);
@@ -93,14 +105,16 @@ public class PersonBuilder {
         return hairColor;
     }
 
-    private static Country inputCountry() {
+    private static Country inputCountry() throws IOException {
         String strCountry;
         Country country;
 
         while (true) {
             try {
                 Console.print("Choose country from " + Country.getAllValues() + ":");
-                strCountry = Console.nextLine().toUpperCase();
+                strCountry = runtimeMode == RuntimeMode.CONSOLE
+                        ? Console.nextLine() : fileReader.readLine();
+                strCountry = strCountry.toUpperCase();
 
                 if (strCountry.isEmpty()) throw new EmptyStringRuntimeException();
                 country = Country.valueOf(strCountry);

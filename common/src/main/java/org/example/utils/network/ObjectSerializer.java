@@ -1,4 +1,4 @@
-package org.example.network.utils;
+package org.example.utils.network;
 
 import org.example.network.dto.Request;
 import org.example.network.dto.Transfer;

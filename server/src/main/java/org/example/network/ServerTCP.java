@@ -4,7 +4,7 @@ package org.example.network;
 import lombok.Getter;
 import org.example.network.dto.Request;
 import org.example.network.dto.Response;
-import org.example.network.utils.ObjectSerializer;
+import org.example.utils.network.ObjectSerializer;
 
 import java.io.FileInputStream;
 import java.io.IOException;

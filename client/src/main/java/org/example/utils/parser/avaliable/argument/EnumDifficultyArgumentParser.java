@@ -1,7 +1,7 @@
 package org.example.utils.parser.avaliable.argument;
 
 import org.example.exceptions.collection.InvalidArgumentException;
-import org.example.model.Difficulty;
+import org.example.model.data.Difficulty;
 import org.example.network.model.ArgumentType;
 import org.example.utils.parser.abstracts.argument.ArgumentParser;
 

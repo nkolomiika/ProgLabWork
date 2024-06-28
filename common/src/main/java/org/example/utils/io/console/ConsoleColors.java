@@ -1,4 +1,4 @@
-package org.example.utils.io;
+package org.example.utils.io.console;
 
 /**
  * Класс для раскрашивания вывода в консоль

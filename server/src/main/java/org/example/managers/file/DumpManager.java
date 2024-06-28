@@ -3,8 +3,8 @@ package org.example.managers.file;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import org.example.model.LabWork;
-import org.example.utils.io.Console;
+import org.example.model.data.LabWork;
+import org.example.utils.io.console.Console;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -27,6 +27,7 @@ public class DumpManager {
         gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .serializeNulls()
+                .excludeFieldsWithoutExposeAnnotation()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTypeAdapter())
                 .create();
 
@@ -70,7 +71,6 @@ public class DumpManager {
 
         return gson.fromJson(jsonString.toString(), collectionType);
     }
-
 
     public static String collectionToJson(ArrayDeque<LabWork> collection){
         return gson.toJson(collection);

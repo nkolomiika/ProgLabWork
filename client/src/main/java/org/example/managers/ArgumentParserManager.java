@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ArgumentParserManager {
+public final class ArgumentParserManager {
 
     private final Map<ArgumentType, ArgumentParser> parsers;
 

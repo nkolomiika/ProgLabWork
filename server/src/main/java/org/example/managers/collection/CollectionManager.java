@@ -4,8 +4,9 @@ import lombok.Getter;
 import org.example.exceptions.collection.EmptyCollectionException;
 import org.example.exceptions.collection.InvalidLabIdException;
 import org.example.managers.file.DumpManager;
-import org.example.model.Difficulty;
-import org.example.model.LabWork;
+import org.example.model.data.Difficulty;
+import org.example.model.data.IdCounter;
+import org.example.model.data.LabWork;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -16,8 +17,8 @@ import java.util.stream.Collectors;
 public class CollectionManager {
     private ArrayDeque<LabWork> collection = new ArrayDeque<>();
 
-    public boolean saveCollection() throws IOException {
-        return DumpManager.writeIntoFile(this.collection);
+    public void saveCollection() throws IOException {
+        DumpManager.writeIntoFile(this.collection);
     }
 
     public boolean add(LabWork labWork) {
@@ -61,8 +62,8 @@ public class CollectionManager {
         return true;
     }
 
-    public boolean removeById(long id) throws InvalidLabIdException, EmptyCollectionException {
-        return collection.remove(this.getLabById(id));
+    public void removeById(long id) throws InvalidLabIdException, EmptyCollectionException {
+        collection.remove(this.getLabById(id));
     }
 
     public LabWork getLabById(long id) throws InvalidLabIdException, EmptyCollectionException {
@@ -75,10 +76,9 @@ public class CollectionManager {
                 });
     }
 
-    public boolean removeFirst() throws EmptyCollectionException {
+    public void removeFirst() throws EmptyCollectionException {
         if (collection.isEmpty()) throw new EmptyCollectionException();
         collection.removeFirst();
-        return true;
     }
 
 
@@ -110,14 +110,13 @@ public class CollectionManager {
         return collection.add(lab);
     }
 
-    public boolean loadCollection() throws IOException {
+    public void loadCollection() throws IOException {
         collection = (ArrayDeque<LabWork>) DumpManager.readCollection();
-        return true;
+        collection.forEach(labWork -> labWork.setId(IdCounter.getNextIdAndIncrement()));
     }
 
-    public boolean clearCollection() {
+    public void clearCollection() {
         collection.clear();
-        return true;
     }
 
     public String convertCollectionToJson() {

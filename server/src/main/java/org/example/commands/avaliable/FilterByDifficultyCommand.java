@@ -2,7 +2,7 @@ package org.example.commands.avaliable;
 
 import org.example.commands.abstarct.Command;
 import org.example.managers.collection.CollectionManager;
-import org.example.model.Difficulty;
+import org.example.model.data.Difficulty;
 import org.example.network.dto.Request;
 import org.example.network.dto.Response;
 import org.example.network.model.ArgumentType;

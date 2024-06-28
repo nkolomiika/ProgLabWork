@@ -5,6 +5,7 @@ import org.example.Server;
 import org.example.commands.avaliable.*;
 import org.example.managers.collection.CollectionManager;
 import org.example.managers.command.CommandManager;
+import org.example.model.data.IdCounter;
 import org.example.network.ServerTCP;
 import org.example.network.dto.Request;
 import org.example.network.dto.Response;
@@ -26,7 +27,6 @@ public class MainRunner extends Runner {
         logger = LoggerFactory.getLogger(Server.class);
     }
 
-
     {
         this.collectionManager = new CollectionManager();
         this.commandManager = new CommandManager() {{
@@ -40,7 +40,8 @@ public class MainRunner extends Runner {
                             new MeowCommand(),
                             new FilterByDifficultyCommand(collectionManager),
                             new RemoveFirstCommand(collectionManager),
-                            new RemoveByIdCommand(collectionManager)
+                            new RemoveByIdCommand(collectionManager),
+                            new ExecuteScriptCommand()
                     ));
         }};
         this.commandManager.addCommand(new HelpCommand(commandManager));
@@ -49,11 +50,20 @@ public class MainRunner extends Runner {
     @Override
     @SneakyThrows
     public void run() {
+        collectionManager.loadCollection();
 
         ServerTCP.acceptConnection();
-        ServerTCP.sendResponse(new Response(Status.OK, commandManager.getAllCommandsName().toString()));
-
-        collectionManager.loadCollection();
+        ServerTCP.sendResponse(
+                new Response(
+                        Status.OK,
+                        commandManager.getAllCommandsName().toString())
+        );
+        ServerTCP.sendResponse(
+                new Response(
+                        Status.OK,
+                        IdCounter.getNextId().toString()
+                )
+        );
 
         while (true) {
             try {
@@ -65,7 +75,6 @@ public class MainRunner extends Runner {
                 ));
 
                 Response response = this.commandManager.executeCommand(req);
-
                 ServerTCP.sendResponse(response);
             } catch (RuntimeException exception) {
                 logger.error(exception.getMessage());

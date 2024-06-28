@@ -1,7 +1,7 @@
 package org.example.network.dto;
 
 import lombok.*;
-import org.example.model.LabWork;
+import org.example.model.data.LabWork;
 
 import java.io.Serializable;
 

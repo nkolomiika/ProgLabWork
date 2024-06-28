@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.model.data;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Data
 @RequiredArgsConstructor
@@ -14,7 +15,6 @@ public class LabWork implements Comparable<LabWork>, Serializable {
 
     @Expose(deserialize = false)
     private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-    private long nextId = 1L;
 
     @Expose
     @NonNull
@@ -51,7 +51,7 @@ public class LabWork implements Comparable<LabWork>, Serializable {
             Integer minimalPoint,
             @NonNull Difficulty difficulty,
             @NonNull Person author) {
-        this.id = nextId++;
+        this.id = IdCounter.getNextIdAndIncrement();
         this.name = name;
         this.coordinates = coordinates;
         this.creationDate = LocalDateTime.now();
@@ -73,5 +73,4 @@ public class LabWork implements Comparable<LabWork>, Serializable {
     public int compareTo(LabWork o) {
         return o.getMinimalPoint() - this.getMinimalPoint();
     }
-
 }

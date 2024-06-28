@@ -4,5 +4,5 @@ public enum Status {
     OK,
     ERROR,
     EXIT,
-    REQUIRE_LAB_WORK
+    EXECUTE_SCRIPT
 }

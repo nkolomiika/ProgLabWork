@@ -3,12 +3,11 @@ package org.example.network;
 
 import org.example.network.dto.Request;
 import org.example.network.dto.Response;
-import org.example.network.utils.ObjectSerializer;
+import org.example.utils.network.ObjectSerializer;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Properties;
 

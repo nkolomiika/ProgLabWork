@@ -1,14 +1,18 @@
-package org.example.utils.io;
+package org.example.utils.io.console;
 
 import lombok.Setter;
 
 import java.util.Scanner;
 
 public class Console {
-
     @Setter
-    private static String outputSymbol = ">";
-    private static final Scanner userScanner = new Scanner(System.in);
+    private static String outputSymbol;
+    private static final Scanner userScanner;
+
+    static {
+        outputSymbol = ">";
+        userScanner = new Scanner(System.in);
+    }
 
     public static String nextLine() {
         System.out.print(outputSymbol + " ");
@@ -21,14 +25,6 @@ public class Console {
 
     public static void print(Object o) {
         System.out.print(o);
-    }
-
-    public static void println(Object o, ConsoleColors consoleColors) {
-        println(ConsoleColors.toColor(o.toString(), consoleColors));
-    }
-
-    public static void print(Object o, ConsoleColors consoleColors) {
-        print(ConsoleColors.toColor(o.toString(), consoleColors));
     }
 
     public static void printError(Object o) {

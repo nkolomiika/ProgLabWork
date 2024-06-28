@@ -1,6 +1,5 @@
 [
   {
-    "id": 1,
     "name": "qwerty",
     "coordinates": {
       "x": 1,
@@ -18,7 +17,6 @@
     }
   },
   {
-    "id": 2,
     "name": "abcde",
     "coordinates": {
       "x": 123,

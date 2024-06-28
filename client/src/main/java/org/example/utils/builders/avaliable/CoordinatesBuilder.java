@@ -1,26 +1,32 @@
-package org.example.utils.builders;
+package org.example.utils.builders.avaliable;
 
+import org.example.exceptions.file.FileReaderRuntimeException;
 import org.example.exceptions.input.EmptyStringRuntimeException;
 import org.example.exceptions.input.OutOfBoundsRuntimeException;
-import org.example.model.Coordinates;
-import org.example.utils.io.Console;
+import org.example.model.data.Coordinates;
+import org.example.runners.RuntimeMode;
+import org.example.utils.builders.abstracts.AbstractBuilder;
+import org.example.utils.io.console.Console;
 
-public class CoordinatesBuilder {
-    public static Coordinates build() {
+import java.io.IOException;
+
+public class CoordinatesBuilder extends AbstractBuilder {
+    public static Coordinates build() throws IOException {
         return new Coordinates(
                 inputX(),
                 inputY()
         );
     }
 
-    private static Integer inputX() {
+    private static Integer inputX() throws IOException {
         String strX;
         int x, maxValue = 583;
 
         while (true) {
             try {
                 Console.print("Input x in coordinates:");
-                strX = Console.nextLine();
+                strX = runtimeMode == RuntimeMode.CONSOLE
+                        ? Console.nextLine() : fileReader.readLine();
 
                 if (strX.isEmpty()) return null;
                 x = Integer.parseInt(strX);
@@ -33,14 +39,15 @@ public class CoordinatesBuilder {
         return x;
     }
 
-    private static float inputY() {
+    private static float inputY() throws IOException {
         String strY;
         float y;
 
         while (true) {
             try {
                 Console.print("Input y in coordinates:");
-                strY = Console.nextLine();
+                strY = runtimeMode == RuntimeMode.CONSOLE
+                        ? Console.nextLine() : fileReader.readLine();
 
                 if (strY.isEmpty()) throw new EmptyStringRuntimeException();
                 y = Float.parseFloat(strY);

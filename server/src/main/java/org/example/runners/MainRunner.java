@@ -41,7 +41,11 @@ public class MainRunner extends Runner {
                             new FilterByDifficultyCommand(collectionManager),
                             new RemoveFirstCommand(collectionManager),
                             new RemoveByIdCommand(collectionManager),
-                            new ExecuteScriptCommand()
+                            new ExecuteScriptCommand(),
+                            new SumOfMinimalPointCommand(collectionManager),
+                            new RemoveGreaterCommand(collectionManager),
+                            new UpdateByIdCommand(collectionManager),
+                            new InfoCommand(collectionManager)
                     ));
         }};
         this.commandManager.addCommand(new HelpCommand(commandManager));

@@ -12,7 +12,7 @@ import org.example.network.model.ArgumentType;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public abstract class Command {
+public abstract class  Command {
     private final String name;
     private final String description;
     private final ArgumentType argumentType;

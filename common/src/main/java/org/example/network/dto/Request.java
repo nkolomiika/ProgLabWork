@@ -13,7 +13,6 @@ public class Request implements Serializable, Transfer {
     @NonNull
     private final String command;
     private String argument;
-
     @Setter
     private LabWork labWork;
 

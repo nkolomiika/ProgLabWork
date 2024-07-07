@@ -2,6 +2,7 @@ package org.example.managers;
 
 import org.example.network.model.ArgumentType;
 import org.example.utils.parser.abstracts.argument.ArgumentParser;
+import org.example.utils.parser.avaliable.argument.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,16 @@ public final class ArgumentParserManager {
 
     {
         this.parsers = new HashMap<>();
+        this.addAllParsers(
+                List.of(
+                        new NoneArgumentParser(),
+                        new NumberArgumentParser(),
+                        new EnumDifficultyArgumentParser(),
+                        new StringArgumentParser(),
+                        new NumberAndLabWorkArgumentParser(),
+                        new LabWorkArgumentParser()
+                )
+        );
     }
 
     public void addParser(ArgumentParser argumentParser) {

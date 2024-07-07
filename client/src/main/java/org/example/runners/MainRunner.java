@@ -17,10 +17,7 @@ import org.example.runner.Runner;
 import org.example.utils.builders.avaliable.LabWorkBuilder;
 import org.example.utils.io.console.Console;
 import org.example.utils.io.file.CustomFileReader;
-import org.example.utils.parser.avaliable.argument.EnumDifficultyArgumentParser;
-import org.example.utils.parser.avaliable.argument.NoneArgumentParser;
-import org.example.utils.parser.avaliable.argument.NumberArgumentParser;
-import org.example.utils.parser.avaliable.argument.StringArgumentParser;
+import org.example.utils.parser.avaliable.argument.*;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -44,14 +41,6 @@ public class MainRunner extends Runner {
     {
         this.customFileReader = new CustomFileReader();
         this.argumentParserManager = new ArgumentParserManager();
-        this.argumentParserManager.addAllParsers(
-                List.of(
-                        new NoneArgumentParser(),
-                        new NumberArgumentParser(),
-                        new EnumDifficultyArgumentParser(),
-                        new StringArgumentParser()
-                )
-        );
     }
 
     @Override
@@ -74,30 +63,28 @@ public class MainRunner extends Runner {
                 String argument = request.getArgument();
 
                 if (isInputValid(command, argument)) {
+                    if (!recursionCheck(command)) {
 
-                    if (runtimeMode == RuntimeMode.FILE
-                            && command.equals("execute_script"))
-                        throw new FindRecursionRuntimeException();
+                        ArgumentType argumentType = availableCommands.get(command);
+                        if (argumentType == ArgumentType.LAB_WORK
+                                || argumentType == ArgumentType.NUMBER_AND_LAB_WORK)
+                            request.setLabWork(LabWorkBuilder.build());
 
-                    if (command.equals("add")
-                            || command.equals("add_if_min"))
-                        request.setLabWork(LabWorkBuilder.build());
+                        ClientTCP.sendRequest(request);
+                        Response response = ClientTCP.receiveResponse();
 
-                    ClientTCP.sendRequest(request);
-                    Response response = ClientTCP.receiveResponse();
-
-                    if (response.status() == Status.ERROR)
-                        throw new RuntimeException(response.data());
-                    else if (response.status() == Status.EXIT)
-                        throw new ExitObligedRuntimeException(response.data());
-                    else if (response.status() == Status.EXECUTE_SCRIPT) {
-                        runtimeMode = RuntimeMode.FILE;
-                        customFileReader.setFile(argument);
-                        LabWorkBuilder.setFileReader(customFileReader);
-                        LabWorkBuilder.setRuntimeMode(runtimeMode);
+                        if (response.status() == Status.ERROR)
+                            throw new RuntimeException(response.data());
+                        else if (response.status() == Status.EXIT)
+                            throw new ExitObligedRuntimeException(response.data());
+                        else if (response.status() == Status.EXECUTE_SCRIPT) {
+                            runtimeMode = RuntimeMode.FILE;
+                            customFileReader.setFile(argument);
+                            LabWorkBuilder.setFileReader(customFileReader);
+                            LabWorkBuilder.setRuntimeMode(runtimeMode);
+                        }
+                        Console.println(response.data());
                     }
-
-                    Console.println(response.data());
                 }
 
             } catch (ExitObligedRuntimeException | NoSuchElementException exception) {
@@ -124,6 +111,11 @@ public class MainRunner extends Runner {
     private boolean isArgumentValid(ArgumentType argumentType, String argument)
             throws InvalidArgumentException {
         return this.argumentParserManager.parse(argumentType, argument);
+    }
+
+    private boolean recursionCheck(String command) {
+        return runtimeMode == RuntimeMode.FILE
+                && command.equals("execute_script");
     }
 
 }

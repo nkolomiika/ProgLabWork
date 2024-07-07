@@ -8,7 +8,6 @@ import org.example.network.model.ArgumentType;
 import org.example.network.model.Status;
 
 public final class RemoveByIdCommand extends Command {
-
     private final CollectionManager collectionManager;
 
     public RemoveByIdCommand(CollectionManager collectionManager) {

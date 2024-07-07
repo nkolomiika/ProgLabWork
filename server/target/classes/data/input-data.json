@@ -1,0 +1,35 @@
+[
+  {
+    "name": "qwerty",
+    "coordinates": {
+      "x": 1,
+      "y": -1.0
+    },
+    "creation-date": "2024-06-06 12:34:11",
+    "minimal-point": 10,
+    "difficulty": "VERY_HARD",
+    "author": {
+      "name": "Sokolova Polly",
+      "weight": 50,
+      "eye-color": "GREEN",
+      "hair-color": "BLUE",
+      "nationality": "RUSSIA"
+    }
+  },
+  {
+    "name": "abcde",
+    "coordinates": {
+      "x": 123,
+      "y": -123.0
+    },
+    "creation-date": "2024-06-06 12:24:56",
+    "minimal-point": 110,
+    "difficulty": "VERY_HARD",
+    "author": {
+      "name": "Belka",
+      "weight": 5,
+      "eye-color": "GREEN",
+      "nationality": "ITALY"
+    }
+  }
+]

@@ -15,6 +15,8 @@ public class Request implements Serializable, Transfer {
     private String argument;
     @Setter
     private LabWork labWork;
+    @Setter
+    private User user;
 
     public Request(@NonNull String command, @NonNull String argument) {
         this.command = command;

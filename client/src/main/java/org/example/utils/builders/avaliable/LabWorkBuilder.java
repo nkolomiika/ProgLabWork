@@ -5,7 +5,7 @@ import org.example.exceptions.input.EmptyStringRuntimeException;
 import org.example.exceptions.input.NegativeValueRuntimeException;
 import org.example.model.data.Difficulty;
 import org.example.model.data.LabWork;
-import org.example.runners.RuntimeMode;
+import org.example.network.model.RuntimeMode;
 import org.example.utils.builders.abstracts.AbstractBuilder;
 import org.example.utils.io.console.Console;
 import org.example.utils.io.file.CustomFileReader;
@@ -25,16 +25,6 @@ public class LabWorkBuilder extends AbstractBuilder {
         PersonBuilder.setRuntimeMode(runtimeMode);
         CoordinatesBuilder.setRuntimeMode(runtimeMode);
     }
-
-    /*
-    * private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-    private String name; //Поле не может быть null, Строка не может быть пустой
-    private Coordinates coordinates; //Поле не может быть null
-    private java.time.LocalDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
-    private Integer minimalPoint; //Поле может быть null, Значение поля должно быть больше 0
-    private Difficulty difficulty; //Поле не может быть null
-    private Person author; //Поле не может быть null
-    */
 
     public static LabWork build() throws FileReaderRuntimeException {
         try {

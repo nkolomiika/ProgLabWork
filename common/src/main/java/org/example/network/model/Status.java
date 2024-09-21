@@ -4,5 +4,7 @@ public enum Status {
     OK,
     ERROR,
     EXIT,
-    EXECUTE_SCRIPT
+    EXECUTE_SCRIPT,
+    LOGIN_FAILED,
+    LOGIN_SUCCESS
 }

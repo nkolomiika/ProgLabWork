@@ -19,10 +19,6 @@ public class CommandManager {
         this.commands = new HashMap<>();
     }
 
-    public Command getCommandByName(String name) {
-        return commands.get(name);
-    }
-
     public Map<String, ArgumentType> getAllCommandsName() {
         return commands.entrySet().stream()
                 .collect(Collectors.toMap(

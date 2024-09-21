@@ -43,7 +43,10 @@ public class LabWork implements Comparable<LabWork>, Serializable {
     @Expose
     @NonNull
     @SerializedName("author")
-    private Person author; //Поле не может быть null
+    private Person author;//Поле не может быть null
+
+    @NonNull
+    private int userId;
 
     public LabWork(
             @NonNull String name,
@@ -51,13 +54,31 @@ public class LabWork implements Comparable<LabWork>, Serializable {
             Integer minimalPoint,
             @NonNull Difficulty difficulty,
             @NonNull Person author) {
-        this.id = IdCounter.getNextIdAndIncrement();
         this.name = name;
         this.coordinates = coordinates;
         this.creationDate = LocalDateTime.now();
         this.minimalPoint = minimalPoint;
         this.difficulty = difficulty;
         this.author = author;
+    }
+
+    public LabWork(
+            @NonNull Long id,
+            @NonNull String name,
+            @NonNull Coordinates coordinates,
+            @NonNull LocalDateTime creationDate,
+            Integer minimalPoint,
+            @NonNull Difficulty difficulty,
+            @NonNull Person author,
+            @NonNull int userId) {
+        this.id = id;
+        this.name = name;
+        this.coordinates = coordinates;
+        this.creationDate = creationDate;
+        this.minimalPoint = minimalPoint;
+        this.difficulty = difficulty;
+        this.author = author;
+        this.userId = userId;
     }
 
     /**

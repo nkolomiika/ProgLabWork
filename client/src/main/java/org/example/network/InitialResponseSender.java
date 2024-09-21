@@ -1,6 +1,5 @@
 package org.example.network;
 
-import org.example.model.data.IdCounter;
 import org.example.network.dto.Response;
 import org.example.network.model.ArgumentType;
 import org.example.utils.parser.avaliable.command.CommandParser;
@@ -10,14 +9,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 public class InitialResponseSender {
-    public static Map<String, ArgumentType> getAvailableCommands() throws IOException, ClassNotFoundException {
+    public static Map<String, ArgumentType> getAvailableCommands()
+            throws IOException, ClassNotFoundException {
         Response initResponse = ClientTCP.receiveResponse();
 
-        String initData = initResponse.data();
+        String initData = initResponse.getData();
         initData = initData.substring(1, initData.length() - 1);
 
         List<String> listOfNames = Arrays.asList(initData.split(", "));
@@ -29,10 +28,5 @@ public class InitialResponseSender {
                         (e1, e2) -> e1,             // Если встречаются одинаковые ключи, оставляем первый
                         HashMap::new                // Создаем новую HashMap
                 ));
-    }
-
-    public static void setNexIdCounter() throws IOException, ClassNotFoundException {
-        Response initResponse = ClientTCP.receiveResponse();
-        IdCounter.setNextId(new AtomicLong(Long.parseLong(initResponse.data())));
     }
 }

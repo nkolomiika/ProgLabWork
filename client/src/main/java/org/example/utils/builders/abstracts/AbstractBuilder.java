@@ -1,6 +1,6 @@
 package org.example.utils.builders.abstracts;
 
-import org.example.runners.RuntimeMode;
+import org.example.network.model.RuntimeMode;
 import org.example.utils.io.file.CustomFileReader;
 
 public abstract class AbstractBuilder {

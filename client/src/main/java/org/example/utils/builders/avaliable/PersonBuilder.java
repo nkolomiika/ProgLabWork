@@ -1,12 +1,11 @@
 package org.example.utils.builders.avaliable;
 
-import org.example.exceptions.file.FileReaderRuntimeException;
 import org.example.exceptions.input.EmptyStringRuntimeException;
 import org.example.exceptions.input.NegativeValueRuntimeException;
 import org.example.model.data.Color;
 import org.example.model.data.Country;
 import org.example.model.data.Person;
-import org.example.runners.RuntimeMode;
+import org.example.network.model.RuntimeMode;
 import org.example.utils.builders.abstracts.AbstractBuilder;
 import org.example.utils.io.console.Console;
 

@@ -4,6 +4,7 @@ package org.example.network;
 import lombok.Getter;
 import org.example.network.dto.Request;
 import org.example.network.dto.Response;
+import org.example.utils.io.console.Console;
 import org.example.utils.network.ObjectSerializer;
 
 import java.io.FileInputStream;
@@ -49,11 +50,17 @@ public final class ServerTCP {
         return ObjectSerializer.deserializeObject(receiveBuffer);
     }
 
-    public static void sendResponse(Response response) throws IOException {
-        Socket socket = socketChannel.socket();
-        OutputStream out = socket.getOutputStream();
-        out.write(ObjectSerializer.serializeObject(response));
-        out.flush();
+    public static void sendResponse(Response response) {
+        new Thread(() -> {
+            try {
+                Socket socket = socketChannel.socket();
+                OutputStream out = socket.getOutputStream();
+                out.write(ObjectSerializer.serializeObject(response));
+                out.flush();
+            } catch (IOException exception) {
+                Console.printError(exception.getMessage());
+            }
+        });
     }
 
 }

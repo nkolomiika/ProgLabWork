@@ -4,6 +4,7 @@ import org.example.exceptions.input.InvalidInputFormatException;
 import org.example.network.ClientTCP;
 import org.example.network.dto.Request;
 import org.example.network.dto.Response;
+import org.example.network.dto.User;
 import org.example.network.model.ArgumentType;
 import org.example.parsers.Parser;
 

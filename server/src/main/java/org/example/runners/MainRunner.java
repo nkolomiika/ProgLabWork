@@ -9,17 +9,17 @@ import org.example.model.data.IdCounter;
 import org.example.network.ServerTCP;
 import org.example.network.dto.Request;
 import org.example.network.dto.Response;
+import org.example.network.model.RuntimeMode;
 import org.example.network.model.Status;
-import org.example.runner.Runner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class MainRunner extends Runner {
+public class MainRunner {
 
     private static final Logger logger;
-
+    private static RuntimeMode runtimeMode;
     private final CommandManager commandManager;
     private final CollectionManager collectionManager;
 
@@ -51,7 +51,6 @@ public class MainRunner extends Runner {
         this.commandManager.addCommand(new HelpCommand(commandManager));
     }
 
-    @Override
     @SneakyThrows
     public void run() {
         collectionManager.loadCollection();
@@ -61,12 +60,6 @@ public class MainRunner extends Runner {
                 new Response(
                         Status.OK,
                         commandManager.getAllCommandsName().toString())
-        );
-        ServerTCP.sendResponse(
-                new Response(
-                        Status.OK,
-                        IdCounter.getNextId().toString()
-                )
         );
 
         while (true) {
@@ -78,7 +71,7 @@ public class MainRunner extends Runner {
                         req.toString()
                 ));
 
-                Response response = this.commandManager.executeCommand(req);
+                Response response = commandManager.executeCommand(req);
                 ServerTCP.sendResponse(response);
             } catch (RuntimeException exception) {
                 logger.error(exception.getMessage());

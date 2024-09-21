@@ -1,6 +1,7 @@
 package org.example.managers;
 
 import org.example.network.model.ArgumentType;
+import org.example.utils.parser.avaliable.argument.UserArgumentParser;
 import org.example.utils.parser.abstracts.argument.ArgumentParser;
 import org.example.utils.parser.avaliable.argument.*;
 
@@ -10,32 +11,33 @@ import java.util.Map;
 
 public final class ArgumentParserManager {
 
-    private final Map<ArgumentType, ArgumentParser> parsers;
+    private static final Map<ArgumentType, ArgumentParser> parsers;
 
-    {
-        this.parsers = new HashMap<>();
-        this.addAllParsers(
+    static {
+        parsers = new HashMap<>();
+        addAllParsers(
                 List.of(
                         new NoneArgumentParser(),
                         new NumberArgumentParser(),
                         new EnumDifficultyArgumentParser(),
                         new StringArgumentParser(),
                         new NumberAndLabWorkArgumentParser(),
-                        new LabWorkArgumentParser()
+                        new LabWorkArgumentParser(),
+                        new UserArgumentParser()
                 )
         );
     }
 
-    public void addParser(ArgumentParser argumentParser) {
-        this.parsers.put(argumentParser.getArgumentType(), argumentParser);
+    public static void addParser(ArgumentParser argumentParser) {
+        parsers.put(argumentParser.getArgumentType(), argumentParser);
     }
 
-    public void addAllParsers(List<ArgumentParser> parserList) {
-        parserList.forEach(this::addParser);
+    public static void addAllParsers(List<ArgumentParser> parserList) {
+        parserList.forEach(ArgumentParserManager::addParser);
     }
 
-    public boolean parse(ArgumentType argumentType, String argument) {
-        return this.parsers.get(argumentType).parse(argument);
+    public static boolean parse(ArgumentType argumentType, String argument) {
+        return parsers.get(argumentType).parse(argument);
     }
 
 }

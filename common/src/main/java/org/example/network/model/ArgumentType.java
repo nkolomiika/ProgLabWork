@@ -6,5 +6,6 @@ public enum ArgumentType {
     NUMBER,
     LAB_WORK,
     NUMBER_AND_LAB_WORK,
-    ENUM_DIFFICULTY
+    ENUM_DIFFICULTY,
+    USER
 }

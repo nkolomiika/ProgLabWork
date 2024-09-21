@@ -8,6 +8,7 @@ import org.example.utils.network.ObjectSerializer;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.Properties;
 
@@ -27,6 +28,8 @@ public final class ClientTCP {
             HOST = properties.getProperty("HOST");
             BUFFER_CAPACITY = Integer.parseInt(properties.getProperty("BUFFER_CAPACITY"));
             clientSocket = new Socket(HOST, PORT);
+        } catch (ConnectException e) {
+            throw new RuntimeException("Ooops! Cannot connect to server :(");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

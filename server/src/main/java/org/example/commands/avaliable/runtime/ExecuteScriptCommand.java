@@ -1,4 +1,4 @@
-package org.example.commands.avaliable;
+package org.example.commands.avaliable.runtime;
 
 import org.example.commands.abstarct.Command;
 import org.example.network.dto.Request;

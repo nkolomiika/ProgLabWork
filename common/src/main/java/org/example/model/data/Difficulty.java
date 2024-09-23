@@ -28,4 +28,8 @@ public enum Difficulty {
 
         return nameList.toString();
     }
+
+    public String getDifficultyName() {
+        return name();
+    }
 }

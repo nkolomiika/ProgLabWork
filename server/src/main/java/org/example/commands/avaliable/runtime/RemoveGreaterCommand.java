@@ -1,4 +1,4 @@
-package org.example.commands.avaliable;
+package org.example.commands.avaliable.runtime;
 
 import org.example.commands.abstarct.Command;
 import org.example.exceptions.collection.EmptyCollectionException;
@@ -22,7 +22,7 @@ public final class RemoveGreaterCommand extends Command {
     @Override
     public Response execute(Request request) throws EmptyCollectionException {
         LabWork lab = request.getLabWork();
-        collectionManager.removeGreater(lab);
+        collectionManager.removeGreater(lab, request.getUser());
         return new Response(
                 Status.OK,
                 "Labs successfully removed with minimal point greater, than " + lab.getMinimalPoint()

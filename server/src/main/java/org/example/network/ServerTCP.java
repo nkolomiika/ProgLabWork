@@ -51,16 +51,14 @@ public final class ServerTCP {
     }
 
     public static void sendResponse(Response response) {
-        new Thread(() -> {
-            try {
-                Socket socket = socketChannel.socket();
-                OutputStream out = socket.getOutputStream();
-                out.write(ObjectSerializer.serializeObject(response));
-                out.flush();
-            } catch (IOException exception) {
-                Console.printError(exception.getMessage());
-            }
-        });
+        try {
+            Socket socket = socketChannel.socket();
+            OutputStream out = socket.getOutputStream();
+            out.write(ObjectSerializer.serializeObject(response));
+            out.flush();
+        } catch (IOException exception) {
+            Console.printError(exception.getMessage());
+        }
     }
 
 }

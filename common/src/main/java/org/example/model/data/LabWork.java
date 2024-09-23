@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class LabWork implements Comparable<LabWork>, Serializable {
 
     @Expose(deserialize = false)
-    private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+    private int id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
 
     @Expose
     @NonNull
@@ -63,7 +63,7 @@ public class LabWork implements Comparable<LabWork>, Serializable {
     }
 
     public LabWork(
-            @NonNull Long id,
+            @NonNull int id,
             @NonNull String name,
             @NonNull Coordinates coordinates,
             @NonNull LocalDateTime creationDate,
@@ -79,6 +79,10 @@ public class LabWork implements Comparable<LabWork>, Serializable {
         this.difficulty = difficulty;
         this.author = author;
         this.userId = userId;
+    }
+
+    public LabWork(int id) {
+        this.id = id;
     }
 
     /**

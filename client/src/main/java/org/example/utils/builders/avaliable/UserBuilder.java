@@ -26,10 +26,17 @@ public class UserBuilder extends AbstractBuilder {
     }
 */
     public static User build() throws IOException {
-        return new User(
+        Console.setOutputSymbol("");
+        User user = new User(
                 inputUsername(),
                 inputPassword()
         );
+        Console.setOutputSymbol(">");
+        return user;
+    }
+
+    public static User buildEmptyUser() {
+        return new User();
     }
 
     private static String inputUsername() throws IOException {

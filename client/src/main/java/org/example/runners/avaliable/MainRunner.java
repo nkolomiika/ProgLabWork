@@ -1,25 +1,24 @@
 package org.example.runners.avaliable;
 
 import lombok.SneakyThrows;
-import org.example.exceptions.collection.InvalidArgumentException;
-import org.example.exceptions.process.CommandNotFoundException;
 import org.example.exceptions.process.ExitObligedRuntimeException;
-import org.example.managers.ArgumentParserManager;
 import org.example.network.ClientTCP;
-import org.example.network.InitialResponseSender;
 import org.example.network.dto.Request;
 import org.example.network.dto.Response;
 import org.example.network.dto.User;
 import org.example.network.model.ArgumentType;
 import org.example.network.model.Status;
 import org.example.network.model.RuntimeMode;
+import org.example.runners.Pair;
 import org.example.runners.abstracts.Runner;
 import org.example.utils.builders.avaliable.LabWorkBuilder;
+import org.example.utils.builders.avaliable.UserBuilder;
 import org.example.utils.io.console.Console;
 import org.example.utils.io.file.CustomFileReader;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import static org.example.network.InitialResponseSender.getAvailableCommands;
@@ -35,7 +34,7 @@ public class MainRunner extends Runner {
 
     @Override
     @SneakyThrows
-    public RuntimeMode run(User user) throws NoSuchElementException {
+    public Pair run(User user) throws NoSuchElementException {
         availableCommands = getAvailableCommands();
 
         while (true) {
@@ -81,12 +80,11 @@ public class MainRunner extends Runner {
                         Console.println(response.getData());
                     }
                 }
-
             } catch (NoSuchElementException exception) {
                 throw new NoSuchElementException(exception.getMessage());
             } catch (ExitObligedRuntimeException exception) {
                 Console.println(exception.getMessage());
-                return exception.getRuntimeMode();
+                return new Pair(exception.getRuntimeMode(), UserBuilder.buildEmptyUser());
             } catch (EOFException exception) {
                 Console.println(exception.getMessage());
                 runtimeMode = RuntimeMode.CONSOLE;
@@ -96,19 +94,6 @@ public class MainRunner extends Runner {
                 Console.printError(exception.getMessage());
             }
         }
-    }
-
-    private boolean isInputValid(String command, String argument)
-            throws RuntimeException {
-        ArgumentType argumentType = availableCommands.get(command);
-        if (argumentType == null) throw new CommandNotFoundException();
-        if (!isArgumentValid(argumentType, argument)) throw new InvalidArgumentException();
-        return true;
-    }
-
-    private boolean isArgumentValid(ArgumentType argumentType, String argument)
-            throws InvalidArgumentException {
-        return ArgumentParserManager.parse(argumentType, argument);
     }
 
     private boolean recursionCheck(String command) {

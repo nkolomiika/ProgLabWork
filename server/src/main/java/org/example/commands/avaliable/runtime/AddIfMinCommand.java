@@ -1,4 +1,4 @@
-package org.example.commands.avaliable;
+package org.example.commands.avaliable.runtime;
 
 import org.example.commands.abstarct.Command;
 import org.example.exceptions.process.CannotAddLabWorkRuntimeException;
@@ -19,7 +19,10 @@ public final class AddIfMinCommand extends Command {
 
     @Override
     public Response execute(Request request) throws CannotAddLabWorkRuntimeException {
-        this.collectionManager.addIfMin(request.getLabWork());
+        this.collectionManager.addIfMin(
+                request.getLabWork(),
+                request.getUser()
+        );
         return new Response(Status.OK, "Lab successfully added!");
     }
 }

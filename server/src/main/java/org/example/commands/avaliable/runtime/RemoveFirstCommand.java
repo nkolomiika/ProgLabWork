@@ -1,4 +1,4 @@
-package org.example.commands.avaliable;
+package org.example.commands.avaliable.runtime;
 
 import org.example.commands.abstarct.Command;
 import org.example.exceptions.collection.EmptyCollectionException;
@@ -18,7 +18,7 @@ public final class RemoveFirstCommand extends Command {
 
     @Override
     public Response execute(Request request) throws EmptyCollectionException {
-        collectionManager.removeFirst();
+        collectionManager.removeFirst(request.getUser());
         return new Response(Status.OK, "Lab Work successfully deleted!");
     }
 }

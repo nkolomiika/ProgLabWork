@@ -1,11 +1,13 @@
 package org.example.network.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.io.Serializable;
 
 @Getter
+@NoArgsConstructor
 public class User implements Transfer, Serializable {
     private String username;
     private String password;
@@ -15,10 +17,11 @@ public class User implements Transfer, Serializable {
         this.password = password;
     }
 
-    private User() {
-    }
-
-    public static User createEmptyUser() {
-        return new User();
+    @Override
+    public String toString() {
+        return "User(" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ')';
     }
 }

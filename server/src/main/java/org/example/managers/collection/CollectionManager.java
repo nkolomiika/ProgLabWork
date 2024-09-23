@@ -4,16 +4,17 @@ import lombok.Getter;
 import org.example.exceptions.collection.EmptyCollectionException;
 import org.example.exceptions.collection.InvalidLabIdException;
 import org.example.exceptions.process.CannotAddLabWorkRuntimeException;
+import org.example.managers.db.DatabaseManager;
 import org.example.managers.file.DumpManager;
 import org.example.model.data.Difficulty;
-import org.example.model.data.IdCounter;
 import org.example.model.data.LabWork;
+import org.example.network.dto.User;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayDeque;
 import java.util.Optional;
-import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 
@@ -30,48 +31,43 @@ public class CollectionManager {
         DumpManager.writeIntoFile(this.collection);
     }
 
-    public void add(LabWork labWork) {
-        collection.addLast(labWork);
+    public void add(LabWork labWork, User user) throws RuntimeException {
+        DatabaseManager.addLabWork(labWork, user);
+        collection.add(labWork);
     }
 
-    public void addIfMin(LabWork labWork) throws CannotAddLabWorkRuntimeException {
+    public void addIfMin(LabWork labWork, User user) throws RuntimeException {
         LabWork minLab = collection.stream()
                 .min(LabWork::compareTo)
                 .orElse(null);
 
         if (minLab == null
                 || minLab.compareTo(labWork) <= 0) {
-            collection.addFirst(labWork);
+            DatabaseManager.addLabWork(labWork, user);
+            collection.add(labWork);
         }
         throw new CannotAddLabWorkRuntimeException();
     }
 
-    public long getMaxId() {
-        return collection.stream()
-                .mapToLong(LabWork::getId)
-                .max()
-                .orElse(0);
-    }
-
-
-    public void update(long id, LabWork labWork) throws InvalidLabIdException {
+    public void update(long id, LabWork labWork, User user) throws RuntimeException {
         Optional<LabWork> optionalLabWork = collection.stream()
                 .filter(lw -> lw.getId() == id)
                 .findFirst();
 
         if (optionalLabWork.isEmpty()) throw new InvalidLabIdException();
+        labWork.setId(optionalLabWork.get().getId());
 
-        LabWork lab = optionalLabWork.get();
-        collection.remove(lab);
+        DatabaseManager.updateLabWorkByIdAndUserId(id, labWork, user);
+        collection.remove(optionalLabWork.get());
         collection.add(labWork);
-        labWork.setId(id);
     }
 
-    public void removeById(long id) throws InvalidLabIdException, EmptyCollectionException {
-        collection.remove(this.getLabById(id));
+    public void removeById(int id, User user) throws RuntimeException {
+        DatabaseManager.deleteLabWorkById(id, user);
+        collection.remove(getLabById(id));
     }
 
-    public LabWork getLabById(long id) throws InvalidLabIdException, EmptyCollectionException {
+    private LabWork getLabById(long id) throws RuntimeException {
         if (collection.isEmpty()) throw new EmptyCollectionException();
         return collection.stream()
                 .filter(lw -> lw.getId() == id)
@@ -81,15 +77,29 @@ public class CollectionManager {
                 });
     }
 
-    public void removeFirst() throws EmptyCollectionException {
+    public void removeFirst(User user) throws EmptyCollectionException {
         if (collection.isEmpty()) throw new EmptyCollectionException();
+        LabWork labWork = collection.peekFirst();
+
+        DatabaseManager.deleteLabWorkById(labWork.getId(), user);
         collection.removeFirst();
     }
 
 
-    public void removeGreater(LabWork lab) throws EmptyCollectionException {
+    public void removeGreater(LabWork lab, User user) throws EmptyCollectionException {
         if (collection.isEmpty()) throw new EmptyCollectionException();
-        collection.removeIf(lw -> lw.compareTo(lab) < 0);
+
+        collection.removeAll(collection.stream()
+                .filter(lw -> lw.compareTo(lab) < 0)
+                .map(LabWork::getId)
+                .map(LabWork::new)
+                .toList()
+        );
+
+        collection.stream()
+                .filter(lw -> lw.compareTo(lab) < 0)
+                .map(LabWork::getId)
+                .forEach(id -> DatabaseManager.deleteLabWorkById(id, user));
     }
 
     public int sumOfMinimumPoint() {
@@ -109,12 +119,16 @@ public class CollectionManager {
         return collection.size();
     }
 
-    public void loadCollection() throws IOException {
-        collection = (ArrayDeque<LabWork>) DumpManager.readCollection();
-        collection.forEach(labWork -> labWork.setId(IdCounter.getNextIdAndIncrement()));
+    public void loadCollection(User user) throws SQLException {
+        collection = DatabaseManager.loadCollection(user);
     }
 
-    public void clearCollection() {
+    public void clearCollectionByExit() {
+        collection.clear();
+    }
+
+    public void clearCollection(User user) throws RuntimeException {
+        DatabaseManager.deleteAllLabWorksByUserId(user);
         collection.clear();
     }
 
@@ -123,10 +137,8 @@ public class CollectionManager {
     }
 
     public String info() {
-        return "[" +
-                "\nCollection type: " + collection.getClass().getSimpleName() +
+        return "Collection type: " + collection.getClass().getSimpleName() +
                 "\nDate of init: " + initializationDate +
-                "\nCollection size: " + collectionSize() +
-                ']';
+                "\nCollection size: " + collectionSize();
     }
 }

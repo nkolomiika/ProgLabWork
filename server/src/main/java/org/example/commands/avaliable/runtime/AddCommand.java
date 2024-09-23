@@ -1,4 +1,4 @@
-package org.example.commands.avaliable;
+package org.example.commands.avaliable.runtime;
 
 import org.example.commands.abstarct.Command;
 import org.example.managers.collection.CollectionManager;
@@ -17,7 +17,10 @@ public final class AddCommand extends Command {
 
     @Override
     public Response execute(Request request) {
-        this.collectionManager.add(request.getLabWork());
+        this.collectionManager.add(
+                request.getLabWork(),
+                request.getUser()
+        );
         return new Response(Status.OK, "Lab successfully added!");
     }
 }

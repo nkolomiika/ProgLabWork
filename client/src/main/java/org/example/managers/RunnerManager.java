@@ -2,6 +2,7 @@ package org.example.managers;
 
 import lombok.SneakyThrows;
 import org.example.network.dto.User;
+import org.example.runners.Pair;
 import org.example.runners.abstracts.Runner;
 import org.example.network.model.RuntimeMode;
 import org.example.runners.avaliable.AuthRunner;
@@ -37,7 +38,7 @@ public class RunnerManager {
     }
 
     @SneakyThrows
-    public RuntimeMode launchRunner(RuntimeMode runtimeMode, User user) throws NoSuchElementException {
+    public Pair launchRunner(RuntimeMode runtimeMode, User user) throws NoSuchElementException {
         return this.runners.get(runtimeMode).run(user);
     }
 

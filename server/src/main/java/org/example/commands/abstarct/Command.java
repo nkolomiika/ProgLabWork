@@ -9,6 +9,8 @@ import org.example.network.dto.Response;
 import org.example.network.model.ArgumentType;
 import org.example.network.model.Role;
 
+import java.sql.SQLException;
+
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -23,7 +25,7 @@ public abstract class  Command {
         this.name = name;
         this.description = description;
         this.argumentType = ArgumentType.NONE;
-        this.role = Role.USER;
+        this.role = Role.AUTH;
     }
 
     public Command(String name, String description, Role role) {
@@ -33,5 +35,12 @@ public abstract class  Command {
         this.role = role;
     }
 
-    public abstract Response execute(Request request);
+    public Command(String name, String description, ArgumentType argumentType) {
+        this.name = name;
+        this.description = description;
+        this.argumentType = argumentType;
+        this.role = Role.AUTH;
+    }
+
+    public abstract Response execute(Request request) throws SQLException;
 }

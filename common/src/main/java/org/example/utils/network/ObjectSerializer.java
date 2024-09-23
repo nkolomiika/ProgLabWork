@@ -26,7 +26,7 @@ public class ObjectSerializer {
         try (ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
              ObjectInputStream ois = new ObjectInputStream(bis)) {
 
-            @SuppressWarnings("unchecked")
+
             T request = (T) ois.readObject();
 
             ois.close();

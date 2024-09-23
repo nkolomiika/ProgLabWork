@@ -9,22 +9,7 @@ import java.io.IOException;
 
 public class UserBuilder extends AbstractBuilder {
 
-    /*private static MessageDigest MD;
-    private final static String SALT;
-    private final static String PEPPER;
 
-    static {
-        Properties properties = new Properties();
-        try {
-            properties.load(new FileInputStream("client\\src\\main\\resources\\application.properties"));
-            SALT = properties.getProperty("SALT");
-            PEPPER = properties.getProperty("PEPPER");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-
-        }
-    }
-*/
     public static User build() throws IOException {
         Console.setOutputSymbol("");
         User user = new User(

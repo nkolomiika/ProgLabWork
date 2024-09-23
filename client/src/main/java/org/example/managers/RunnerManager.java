@@ -2,14 +2,12 @@ package org.example.managers;
 
 import lombok.SneakyThrows;
 import org.example.network.dto.User;
+import org.example.network.model.RuntimeMode;
 import org.example.runners.Pair;
 import org.example.runners.abstracts.Runner;
-import org.example.network.model.RuntimeMode;
 import org.example.runners.avaliable.AuthRunner;
 import org.example.runners.avaliable.MainRunner;
-import org.example.utils.io.console.Console;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

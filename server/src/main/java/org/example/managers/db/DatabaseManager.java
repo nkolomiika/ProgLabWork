@@ -58,14 +58,15 @@ public class DatabaseManager {
         }
     }
 
-    public static boolean addUser(User user) {
+    public static boolean addUser(User user) throws RuntimeException {
         try {
             String username = user.getUsername();
             String SALT = generateRandomString();
             String password = PEPPER + user.getPassword() + SALT;
 
-            PreparedStatement ps = connection.prepareStatement(DatabaseRequests.addUser());
             if (checkUserExists(username)) throw new UserAlreadyExistsSQLException();
+
+            PreparedStatement ps = connection.prepareStatement(DatabaseRequests.addUser());
             ps.setString(1, username);
             ps.setString(2, getSHAHash(password));
             ps.setString(3, SALT);
@@ -73,8 +74,7 @@ public class DatabaseManager {
 
             return true;
         } catch (SQLException exception) {
-            Console.printError(exception.getMessage());
-            return false;
+            throw new RuntimeException(exception.getMessage());
         }
     }
 
@@ -91,7 +91,7 @@ public class DatabaseManager {
                 return toCheckPass.equals(resultSet.getString("password"));
             }
         } catch (SQLException exception) {
-            Console.printError(exception.getMessage());
+            throw new RuntimeException(exception.getMessage());
         }
         return false;
     }

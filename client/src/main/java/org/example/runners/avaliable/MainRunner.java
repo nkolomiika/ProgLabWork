@@ -40,9 +40,9 @@ public class MainRunner extends Runner {
         while (true) {
             try {
 
-                String input = runtimeMode == RuntimeMode.CONSOLE
-                        ? Console.nextLine()
-                        : customFileReader.readLine();
+                String input =
+                        runtimeMode == RuntimeMode.CONSOLE
+                        ? Console.nextLine() : customFileReader.readLine();
                 LabWorkBuilder.setRuntimeMode(runtimeMode);
 
                 if (input.isEmpty()) continue;
@@ -66,7 +66,7 @@ public class MainRunner extends Runner {
 
                         if (response.getStatus() == Status.ERROR)
                             throw new RuntimeException(response.getData());
-                        else if (runtimeMode != response.getRuntimeMode())
+                        else if (response.getStatus() == Status.EXIT)
                             throw new ExitObligedRuntimeException(
                                     response.getData(),
                                     response.getRuntimeMode()
@@ -75,7 +75,6 @@ public class MainRunner extends Runner {
                             runtimeMode = RuntimeMode.FILE;
                             customFileReader.setFile(argument);
                             LabWorkBuilder.setFileReader(customFileReader);
-                            LabWorkBuilder.setRuntimeMode(runtimeMode);
                         }
                         Console.println(response.getData());
                     }

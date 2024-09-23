@@ -28,13 +28,13 @@ public class MainRunner implements Runnable{
     private static Role role;
     private final CommandManager commandManager;
     private final CollectionManager collectionManager;
-    private static final ExecutorService cashedThreadPool;
+    private static final ExecutorService fixedThreadPool;
 
 
     static {
         logger = LoggerFactory.getLogger(Server.class);
         role = Role.NON_AUTH;
-        cashedThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()); ;
+        fixedThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()); ;
     }
 
     {
@@ -81,7 +81,7 @@ public class MainRunner implements Runnable{
                         req.toString()
                 ));
 
-                Future<Response> future = cashedThreadPool.submit(() -> commandManager.executeCommand(req));
+                Future<Response> future = fixedThreadPool.submit(() -> commandManager.executeCommand(req));
                 Response response = future.get();
                 // Response response = commandManager.executeCommand(req);
                 ServerTCP.sendResponse(response);

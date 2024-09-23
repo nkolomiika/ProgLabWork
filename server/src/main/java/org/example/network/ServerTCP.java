@@ -43,14 +43,14 @@ public final class ServerTCP {
         socketChannel = serverSocketChannel.accept();
     }
 
-    public static Request receiveRequest() throws IOException, ClassNotFoundException {
+    public synchronized static Request receiveRequest() throws IOException, ClassNotFoundException {
         byte[] receiveBuffer = new byte[BUFFER_CAPACITY * BUFFER_CAPACITY];
         Socket socket = socketChannel.socket();
         int read = socket.getInputStream().read(receiveBuffer);
         return ObjectSerializer.deserializeObject(receiveBuffer);
     }
 
-    public static void sendResponse(Response response) {
+    public synchronized static void sendResponse(Response response) {
         try {
             Socket socket = socketChannel.socket();
             OutputStream out = socket.getOutputStream();

@@ -78,7 +78,7 @@ public class DatabaseManager {
         }
     }
 
-    public static boolean confirmUser(User user) {
+    public synchronized static boolean confirmUser(User user) {
         try {
             String username = user.getUsername();
             PreparedStatement ps = connection.prepareStatement(DatabaseRequests.getUserByUsername());
@@ -96,13 +96,13 @@ public class DatabaseManager {
         return false;
     }
 
-    private static boolean checkUserExists(String username) throws SQLException {
+    private synchronized static boolean checkUserExists(String username) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(DatabaseRequests.getUserByUsername());
         ps.setString(1, username);
         return ps.executeQuery().next();
     }
 
-    private static void setAuthorPreparedStatement(PreparedStatement ps, Person author)
+    private synchronized static void setAuthorPreparedStatement(PreparedStatement ps, Person author)
             throws SQLException {
         ps.setString(1, author.getName());
         ps.setFloat(2, author.getWeight());
@@ -111,7 +111,7 @@ public class DatabaseManager {
         ps.setObject(5, author.getNationality(), Types.OTHER);
     }
 
-    private static int addAuthor(Person author) throws SQLException {
+    private synchronized static int addAuthor(Person author) throws SQLException {
         PreparedStatement psCheck = connection.prepareStatement(DatabaseRequests.checkIfAuthorExists());
         setAuthorPreparedStatement(psCheck, author);
         ResultSet rsCheck = psCheck.executeQuery();
@@ -124,7 +124,7 @@ public class DatabaseManager {
         return rsAdd.getInt("id");
     }
 
-    public static int getUserIdByUsername(User user) throws SQLException {
+    public synchronized static int getUserIdByUsername(User user) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(DatabaseRequests.getUserIdByUsername());
         ps.setString(1, user.getUsername());
 
@@ -133,7 +133,7 @@ public class DatabaseManager {
         return rs.getInt("id");
     }
 
-    public static LabWork getLabWorkById(int id) throws SQLException, RuntimeException {
+    public synchronized static LabWork getLabWorkById(int id) throws SQLException, RuntimeException {
         PreparedStatement ps = connection.prepareStatement(DatabaseRequests.getLabWOrkById());
         ps.setInt(1, id);
 
@@ -143,7 +143,7 @@ public class DatabaseManager {
         throw new InvalidLabIdException();
     }
 
-    public static void addLabWork(LabWork labWork, User user) throws RuntimeException {
+    public synchronized static void addLabWork(LabWork labWork, User user) throws RuntimeException {
         try {
             int authorId = addAuthor(labWork.getAuthor());
             int userId = getUserIdByUsername(user);
@@ -166,7 +166,7 @@ public class DatabaseManager {
         }
     }
 
-    private static void updateAuthorById(int id, Person author) {
+    private synchronized static void updateAuthorById(int id, Person author) {
         try {
             PreparedStatement ps = connection.prepareStatement(DatabaseRequests.updateAuthorById());
 
@@ -184,7 +184,7 @@ public class DatabaseManager {
         }
     }
 
-    public static void updateLabWorkByIdAndUserId(long labWorkId, LabWork labWork, User user)
+    public synchronized static void updateLabWorkByIdAndUserId(long labWorkId, LabWork labWork, User user)
             throws RuntimeException {
         try {
             PreparedStatement ps = connection.prepareStatement(DatabaseRequests.updateLabWorkByIdAndUserId());
@@ -209,7 +209,7 @@ public class DatabaseManager {
         }
     }
 
-    private static int getAuthorIdByLabWorkId(long labWorkId) {
+    private synchronized static int getAuthorIdByLabWorkId(long labWorkId) {
         try {
             PreparedStatement ps = connection.prepareStatement(DatabaseRequests.getAuthorIdByLabWorkId());
             ps.setLong(1, labWorkId);
@@ -219,7 +219,7 @@ public class DatabaseManager {
         }
     }
 
-    public static void deleteAllLabWorksByUserId(User user) throws RuntimeException {
+    public synchronized static void deleteAllLabWorksByUserId(User user) throws RuntimeException {
         try {
             PreparedStatement ps = connection.prepareStatement(DatabaseRequests.deleteAllLabWorkByUserId());
             int userId = getUserIdByUsername(user);
@@ -231,7 +231,7 @@ public class DatabaseManager {
         }
     }
 
-    public static void deleteLabWorkById(long id, User user) {
+    public synchronized static void deleteLabWorkById(long id, User user) {
         try {
             PreparedStatement ps = connection.prepareStatement(DatabaseRequests.deleteLabWorkById());
             ps.setLong(1, id);
@@ -242,7 +242,7 @@ public class DatabaseManager {
         }
     }
 
-    public static ArrayDeque<LabWork> loadCollection(User user)
+    public synchronized static ArrayDeque<LabWork> loadCollection(User user)
             throws SQLException {
         PreparedStatement ps = connection.prepareStatement(DatabaseRequests.getAllLabWorksJoinAuthorIdByUserId());
 
@@ -257,7 +257,7 @@ public class DatabaseManager {
         return collection;
     }
 
-    public static LabWork createLabWork(ResultSet resultSet) throws SQLException {
+    public synchronized static LabWork createLabWork(ResultSet resultSet) throws SQLException {
         Date date = resultSet.getDate("creation_date");
         LocalDateTime creationDate = Instant
                 .ofEpochMilli(date.getTime())

@@ -11,18 +11,18 @@ import java.util.concurrent.Future;
 
 
 public class FutureManager {
-    private static final Collection<Future<Response>> cashedThreadPoolFutures = new ArrayList<>();
+    private static final Collection<Future<Response>> cachedThreadPoolFutures;
 
-    public static void addNewFixedThreadPoolFuture(Future<Response> future) {
-        cashedThreadPoolFutures.add(future);
+    static {
+        cachedThreadPoolFutures = new ArrayList<>();
     }
 
     public static void checkAllFutures() {
 
-        if (!cashedThreadPoolFutures.isEmpty()) {
-            cashedThreadPoolFutures.forEach(s -> Console.println(s.toString()));
+        if (!cachedThreadPoolFutures.isEmpty()) {
+            cachedThreadPoolFutures.forEach(s -> Console.println(s.toString()));
         }
-        cashedThreadPoolFutures.stream()
+        cachedThreadPoolFutures.stream()
                 .filter(Future::isDone)
                 .forEach(future -> {
                     try {
@@ -31,6 +31,6 @@ public class FutureManager {
                         Console.printError(e.getMessage());
                     }
                 });
-        cashedThreadPoolFutures.removeIf(Future::isDone);
+        cachedThreadPoolFutures.removeIf(Future::isDone);
     }
 }

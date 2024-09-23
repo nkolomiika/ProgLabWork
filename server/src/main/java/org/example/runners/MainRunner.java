@@ -7,6 +7,7 @@ import org.example.commands.avaliable.auth.RegisterCommand;
 import org.example.commands.avaliable.runtime.*;
 import org.example.managers.collection.CollectionManager;
 import org.example.managers.command.CommandManager;
+import org.example.managers.threads.FutureManager;
 import org.example.network.ServerTCP;
 import org.example.network.dto.Request;
 import org.example.network.dto.Response;
@@ -17,17 +18,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-public class MainRunner {
+public class MainRunner implements Runnable{
 
     private static final Logger logger;
     private static Role role;
     private final CommandManager commandManager;
     private final CollectionManager collectionManager;
+    private static final ExecutorService cashedThreadPool;
+
 
     static {
         logger = LoggerFactory.getLogger(Server.class);
         role = Role.NON_AUTH;
+        cashedThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()); ;
     }
 
     {
@@ -56,6 +63,7 @@ public class MainRunner {
         this.commandManager.addCommand(new HelpCommand(commandManager));
     }
 
+    @Override
     public void run() {
         ServerTCP.sendResponse(
                 new Response(
@@ -65,6 +73,7 @@ public class MainRunner {
 
         while (true) {
             try {
+                FutureManager.checkAllFutures();
                 Request req = ServerTCP.receiveRequest();
 
                 logger.info(String.format("Address: %s; %s",
@@ -72,7 +81,9 @@ public class MainRunner {
                         req.toString()
                 ));
 
-                Response response = commandManager.executeCommand(req);
+                Future<Response> future = cashedThreadPool.submit(() -> commandManager.executeCommand(req));
+                Response response = future.get();
+                // Response response = commandManager.executeCommand(req);
                 ServerTCP.sendResponse(response);
 
                 if (response.getStatus().equals(Status.LOGIN_SUCCESS)) {

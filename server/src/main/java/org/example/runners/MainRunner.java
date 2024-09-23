@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class MainRunner implements Runnable{
+public class MainRunner {
 
     private static final Logger logger;
     private static Role role;
@@ -34,7 +34,8 @@ public class MainRunner implements Runnable{
     static {
         logger = LoggerFactory.getLogger(Server.class);
         role = Role.NON_AUTH;
-        fixedThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()); ;
+        fixedThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        ;
     }
 
     {
@@ -63,8 +64,7 @@ public class MainRunner implements Runnable{
         this.commandManager.addCommand(new HelpCommand(commandManager));
     }
 
-    @Override
-    public void run() {
+    public void run() throws Exception {
         ServerTCP.sendResponse(
                 new Response(
                         Status.OK,
@@ -73,7 +73,7 @@ public class MainRunner implements Runnable{
 
         while (true) {
             try {
-                FutureManager.checkAllFutures();
+                // FutureManager.checkAllFutures();
                 Request req = ServerTCP.receiveRequest();
 
                 logger.info(String.format("Address: %s; %s",
@@ -101,9 +101,6 @@ public class MainRunner implements Runnable{
                 ServerTCP.sendResponse(
                         new Response(Status.ERROR, exception.getMessage())
                 );
-            } catch (Exception exception) {
-                logger.error(exception.getMessage());
-                break;
             }
         }
     }
